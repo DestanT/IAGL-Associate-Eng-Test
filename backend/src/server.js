@@ -12,20 +12,14 @@ const server = () => {
     res.json(await todoService.getTodos());
   });
 
-  /**
-  POST /api/todo
-  {
-   "task": "Some API"
-  }
-
-   {
-    "todos": [
-      {
-        "task": "Some API"
-      }
-    ]
-   }
-  **/
+  server.post('/api/todo', async (req, res) => {
+    try {
+      const newTodo = await todoService.addTodo(req.body);
+      res.status(201).json(newTodo);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
 
   return server;
 };

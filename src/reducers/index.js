@@ -1,9 +1,24 @@
-import { FETCH_TODOS } from "../actions/types";
+import { FETCH_TODOS, ADD_TODO } from "../actions/types";
 
-export default function(state = {}, action) {
+const initialState = {
+  data: { todos: [] },
+  isLoadingData: false,
+};
+
+export default function(state = initialState, action) {
   switch (action.type) {
     case FETCH_TODOS:
-      return { data: action.payload };
+      return { 
+        ...state,
+        isLoadingData: false,
+        data: { todos: action.payload.todos }
+      };
+    case ADD_TODO:
+      return { 
+        ...state, 
+        isLoadingData: false,
+        data: { todos: [...state.data.todos, action.payload] }
+      };
     default:
       return state;
   }
