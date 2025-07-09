@@ -11,14 +11,17 @@ class TodoList extends Component {
   }
 
   render() {
-    const {todos} = this.props.data;
-    return (<ul className="todo-list">
-      {todos && todos.length
+    const { todos } = this.props.data;
+    
+    return (
+      <ul className="todo-list">
+        {todos && todos.length
         ? todos.map((todo, index) => {
           return <Todo key={`todo-${index}`} todo={todo.task}/>;
         })
-        : "No todos, yay!"}
-    </ul>);
+        : <li className="no-todos">No todos, yay!</li>}
+      </ul>
+    );
   }
 }
 
@@ -26,9 +29,9 @@ const mapStateToProps = ({data = {}, isLoadingData = false}) => ({
   data,
   isLoadingData
 });
-export default connect(
-  mapStateToProps,
-  {
-    fetchTodos
-  }
-)(TodoList);
+
+const mapDispatchToProps = {
+  fetchTodos
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList);

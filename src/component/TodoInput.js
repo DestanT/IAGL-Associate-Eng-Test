@@ -7,28 +7,46 @@ class TodoInput extends React.Component {
     input: "",
   };
 
-  handleChange = (e) => {
+  handleInputChange = (e) => {
     this.setState({ input: e.target.value });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
-    if (this.state.input.trim()) {
-      this.props.addTodo({ task: this.state.input });
-      this.setState({ input: "" });
+    const { input } = this.state;
+    
+    if (input.trim()) {
+      try {
+        await this.props.addTodo({ task: input.trim() });
+        this.setState({ input: "" });
+      } catch (error) {
+        // Error is handled by Redux state
+      }
     }
   };
 
   render() {
+    const { input } = this.state;
+
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input
-          type="text"
-          value={this.state.input}
-          onChange={this.handleChange}
-        />
-        <button type="submit">Add Todo</button>
-      </form>
+      <div className="add-todo-container">
+        <form onSubmit={this.handleSubmit} className="add-todo-form">
+          <input
+            type="text"
+            value={input}
+            onChange={this.handleInputChange}
+            placeholder="What needs to be done?"
+            className="add-todo-input"
+          />
+          <button
+            type="submit" 
+            className="add-todo-button"
+            disabled={!input.trim()}
+          >
+            Add
+          </button>
+        </form>
+      </div>
     );
   }
 }
@@ -37,4 +55,8 @@ const mapStateToProps = (state) => ({
   todos: state.todos,
 });
 
-export default connect(mapStateToProps, { addTodo })(TodoInput);
+const mapDispatchToProps = {
+  addTodo
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoInput); 
